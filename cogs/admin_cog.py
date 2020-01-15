@@ -22,9 +22,8 @@ def is_owner():
     return commands.check(predicate)
 
 
-class Tachibana_admin(commands.Cog):  # コグとして用いるクラスを定義。
-
-    def __init__(self, bot):  # TestCogクラスのコンストラクタ。Botを受取り、インスタンス変数として保持。
+class Tachibana_admin(commands.Cog):
+    def __init__(self, bot):
         self.bot = bot
         self.master_path = os.path.dirname(
             os.path.dirname(os.path.abspath(__file__)))
@@ -61,5 +60,5 @@ class Tachibana_admin(commands.Cog):  # コグとして用いるクラスを定�
         await ctx.send(f'to <@{self.bot.admin_id}> at {ctx.command.name} command\n{error}')
 
 
-def setup(bot):  # Bot本体側からコグを読み込む際に呼び出される関数。
-    bot.add_cog(Tachibana_admin(bot))  # TestCogにBotを渡してインスタンス化し、Botにコグとして登録する。
+def setup(bot):
+    bot.add_cog(Tachibana_admin(bot))
