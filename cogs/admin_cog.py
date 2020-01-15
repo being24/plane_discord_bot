@@ -22,7 +22,7 @@ def is_owner():
     return commands.check(predicate)
 
 
-class Tachibana_admin(commands.Cog):
+class admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.master_path = os.path.dirname(
@@ -59,6 +59,10 @@ class Tachibana_admin(commands.Cog):
     async def status_error(self, ctx, error):
         await ctx.send(f'to <@{self.bot.admin_id}> at {ctx.command.name} command\n{error}')
 
+    @commands.command(aliases=['p'], hidden=True)
+    async def ping(self, ctx):
+        await ctx.send('pong!')
+
 
 def setup(bot):
-    bot.add_cog(Tachibana_admin(bot))
+    bot.add_cog(admin(bot))
