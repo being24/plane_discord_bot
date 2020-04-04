@@ -3,7 +3,6 @@
 
 import codecs
 import json
-import logging.config
 import os
 import sys
 import traceback
@@ -17,11 +16,11 @@ class MyBot(commands.Bot):
         super().__init__(command_prefix, help_command=None)
 
         self.INITIAL_COGS = [
-            filename[:-3] for filename in os.listdir("./cogs") if filename.endswith(".py")]
+            filename[:-3] for filename in os.listdir(currentpath + "/cogs") if filename.endswith(".py")]
 
         for cog in self.INITIAL_COGS:
             try:
-                self.load_extension(cog)
+                self.load_extension(f'cogs.{cog}')
             except Exception:
                 traceback.print_exc()
 
@@ -31,7 +30,6 @@ class MyBot(commands.Bot):
         print(self.user.name)
         print(self.user.id)
         print('------')
-        logging.info('rebooted')
         await bot.change_presence(activity=discord.Game(name="plane bot"))
 
 
@@ -53,16 +51,6 @@ if __name__ == '__main__':
     currentpath = os.path.dirname(os.path.abspath(__file__))
 
     token = read_token()
-
-    root_logger = logging.getLogger()
-    root_logger.setLevel(logging.INFO)
-
-    handler = logging.FileHandler(
-        currentpath + "/data/log/logger.log", 'a', 'utf-8')
-    formatter = logging.Formatter(
-        '%(levelname)s : %(asctime)s : %(message)s')
-    handler.setFormatter(formatter)
-    root_logger.addHandler(handler)
 
     bot = MyBot(command_prefix="!")
     bot.run(token)
