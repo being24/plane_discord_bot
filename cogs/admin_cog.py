@@ -9,8 +9,10 @@ import typing
 from datetime import datetime
 
 import discord
-from discord.ext.commands.core import command
+import discosnow as ds
 from discord.ext import commands, tasks
+
+from .utils.common import CommonUtil
 
 
 class Admin(commands.Cog, name='管理用コマンド群'):
@@ -20,11 +22,13 @@ class Admin(commands.Cog, name='管理用コマンド群'):
 
     def __init__(self, bot):
         self.bot = bot
+        self.c = CommonUtil()
+
         self.master_path = os.path.dirname(
             os.path.dirname(os.path.abspath(__file__)))
 
-        if not self.bot.loop.is_running():
-            self.auto_backup.start()
+        self.auto_backup.stop()
+        self.auto_backup.start()
 
     async def cog_check(self, ctx):
         return ctx.guild and await self.bot.is_owner(ctx.author)
@@ -123,22 +127,32 @@ class Admin(commands.Cog, name='管理用コマンド群'):
 
     @tasks.loop(minutes=1.0)
     async def auto_backup(self):
-        await self.bot.wait_until_ready()
-
         now = datetime.now()
         now_HM = now.strftime('%H:%M')
 
         if now_HM == '04:00':
             channel = self.bot.get_channel(745128369170939965)
 
-            SQLite_files = [
+            json_files = [
                 filename for filename in os.listdir(
                     self.master_path +
-                    "/data")if filename.endswith(".sqlite")]
+                    "/data")if filename.endswith(".json")]
+
+            sql_files = [
+                filename for filename in os.listdir(
+                    self.master_path +
+                    "/data")if filename.endswith(".sqlite3")]
+
+            # json_files.extend(sql_files)
             my_files = [
-                discord.File(f'{self.master_path}/data/{i}')for i in SQLite_files]
+                discord.File(f'{self.master_path}/data/{i}')for i in sql_files]
 
             await channel.send(files=my_files)
+
+    @auto_backup.before_loop
+    async def before_printer(self):
+        print('admin waiting...')
+        await self.bot.wait_until_ready()
 
 
 def setup(bot):
