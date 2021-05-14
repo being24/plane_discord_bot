@@ -4,4 +4,4 @@ discord.py==1.7.2
 discosnow==0.0.4
 python-dotenv==0.17.1
 sentry-sdk==1.0.0
-SQLAlchemy==1.4.0b3
+SQLAlchemy==1.4.15
