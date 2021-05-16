@@ -47,7 +47,7 @@ class Admin(commands.Cog, name='管理用コマンド群'):
         await guild.system_channel.send(embed=embed)
 
     @commands.command(aliases=['re'], hidden=True)
-    async def reload(self, ctx, cogname: typing.Optional[str] = "ALL"):
+    async def reload(self, ctx, cogname: str = "ALL"):
         if cogname == "ALL":
             reloaded_list = []
             for cog in os.listdir(self.master_path + "/cogs"):
@@ -57,8 +57,9 @@ class Admin(commands.Cog, name='管理用コマンド群'):
                         self.bot.unload_extension(f'cogs.{cog}')
                         self.bot.load_extension(f'cogs.{cog}')
                         reloaded_list.append(cog)
-                    except Exception:
-                        traceback.print_exc()
+                    except Exception as e:
+                        print(e)
+                        await ctx.reply(e, mention_author=False)
             await ctx.reply(f"{reloaded_list}をreloadしました", mention_author=False)
         else:
             try:
