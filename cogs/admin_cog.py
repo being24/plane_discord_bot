@@ -4,8 +4,6 @@
 
 import os
 import time
-import traceback
-import typing
 from datetime import datetime
 
 import discord
