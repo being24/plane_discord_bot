@@ -8,6 +8,7 @@ from datetime import datetime
 
 import discord
 import discosnow as ds
+import tzlocal
 from discord.ext import commands, tasks
 
 from .utils.common import CommonUtil
@@ -24,6 +25,8 @@ class Admin(commands.Cog, name='管理用コマンド群'):
 
         self.master_path = os.path.dirname(
             os.path.dirname(os.path.abspath(__file__)))
+
+        self.local_timezone = tzlocal.get_localzone()
 
         self.auto_backup.stop()
         self.auto_backup.start()
@@ -130,7 +133,7 @@ class Admin(commands.Cog, name='管理用コマンド群'):
 
     @tasks.loop(minutes=1.0)
     async def auto_backup(self):
-        now = datetime.now()
+        now = datetime.now(self.local_timezone)
         now_HM = now.strftime('%H:%M')
 
         if now_HM == '04:00':
