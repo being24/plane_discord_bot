@@ -1,4 +1,4 @@
-FROM python:3.8-alpine
+FROM python:3.10-alpine
 
 ARG BOT_NAME="plane_discord_bot"
 
@@ -20,6 +20,6 @@ RUN set -x && \
     chmod 0700 ./${BOT_NAME}/bot.py && \
     apk del build-base  && \
     rm -rf /var/cache/apk/*  && \
-    echo "Hello, ${BOT_NAME} ready!" 
+    echo "Hello, ${BOT_NAME} ready!"
 
 CMD ["/opt/${BOT_NAME}/bot.sh"]
