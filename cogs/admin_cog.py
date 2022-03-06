@@ -5,12 +5,17 @@
 import os
 import time
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 import discord
-import tzlocal
 from discord.ext import commands, tasks
 
 from .utils.common import CommonUtil
+
+
+class Permission_Converter(commands.Converter):
+    async def convert(self, ctx, param):
+        return discord.Permissions(int(param))
 
 
 class Admin(commands.Cog, name='管理用コマンド群'):
@@ -25,7 +30,7 @@ class Admin(commands.Cog, name='管理用コマンド群'):
         self.master_path = os.path.dirname(
             os.path.dirname(os.path.abspath(__file__)))
 
-        self.local_timezone = tzlocal.get_localzone()
+        self.local_timezone = ZoneInfo("Asia/Tokyo")
 
         self.auto_backup.stop()
         self.auto_backup.start()
@@ -98,12 +103,13 @@ class Admin(commands.Cog, name='管理用コマンド群'):
 
     @commands.command(hidden=True)
     async def back_up(self, ctx):
-        SQLite_files = [
-            filename for filename in os.listdir(self.master_path + "/data")
-            if filename.endswith(".sqlite")]
+        sql_files = [
+            filename for filename in os.listdir(
+                self.master_path +
+                "/data")if filename.endswith(".sqlite3")]
 
         my_files = [discord.File(f'{self.master_path}/data/{i}')
-                    for i in SQLite_files]
+                    for i in sql_files]
 
         await ctx.send(files=my_files)
 
@@ -131,16 +137,12 @@ class Admin(commands.Cog, name='管理用コマンド群'):
 
     @tasks.loop(minutes=1.0)
     async def auto_backup(self):
-        now = datetime.now(self.local_timezone)
+        now = discord.utils.utcnow()
+        now = now.astimezone(self.local_timezone)
         now_HM = now.strftime('%H:%M')
 
-        if now_HM == '04:00':
+        if now_HM == '04:20':
             channel = self.bot.get_channel(745128369170939965)
-
-            json_files = [
-                filename for filename in os.listdir(
-                    self.master_path +
-                    "/data")if filename.endswith(".json")]
 
             sql_files = [
                 filename for filename in os.listdir(
