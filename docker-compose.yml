@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  plane_discord_bot:
+    image: "ghcr.io/being24/plane_discord_bot:latest"
+    volumes:
+      - ./data:/opt/plane_discord_bot/data
+      - ./log:/opt/plane_discord_bot/log
+    env_file:
+      - ./.env
+    restart: always
