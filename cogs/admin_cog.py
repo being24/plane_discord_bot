@@ -110,9 +110,9 @@ class Admin(commands.Cog, name="管理用コマンド群"):
     @tasks.loop(minutes=1.0)
     async def auto_backup(self):
         now = datetime.now(self.local_timezone)
-        now_HM = now.strftime("%H:%M")
+        hour_minute = now.strftime("%H:%M")
 
-        if now_HM == "04:00":
+        if hour_minute == "04:00":
             channel = self.bot.get_channel(745128369170939965)
 
             data_files = list(self.master_path.glob("data/*.sqlite3"))
@@ -130,8 +130,9 @@ class Admin(commands.Cog, name="管理用コマンド群"):
         print("admin waiting...")
         await self.bot.wait_until_ready()
 
-    @commands.Cog.listener()
-    async def on_message(self, _):
+    @commands.Cog.listener(name="on_message")
+    async def watch_dog(self, _):
+        """watch dog"""
         if not self.auto_backup.is_running():
             logger.warning("auto_backup is not running!")
             self.auto_backup.start()
