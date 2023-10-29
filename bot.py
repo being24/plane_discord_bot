@@ -9,7 +9,7 @@ from discord.ext import commands  # discord.pyのコマンドフレームワー�
 from dotenv import load_dotenv  # .envファイルを扱うためのライブラリ
 
 
-class TokenNotFound(Exception):
+class TokenNotFoundError(Exception):
     pass
 
 
@@ -50,14 +50,13 @@ if __name__ == "__main__":
     load_dotenv(dotenv_path)
 
     token = getenv("DISCORD_BOT_TOKEN")
-    dsn = getenv("SENTRY_DSN")
 
     # ログファイルのパスを設定(要解説)
     logfile_path = pathlib.Path(__file__).parents[0] / "log" / "discord.log"
 
     # tokenを取得できなかった場合はエラーを出す
     if token is None:
-        raise TokenNotFound("Token not found error!")
+        raise TokenNotFoundError("Token not found error!")
 
     # ログファイルの設定
     # loggerの取得、loggerの名前をdiscordにすることで名前空間が異なっていてもログを単一ファイルにまとめることができる
