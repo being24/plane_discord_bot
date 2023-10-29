@@ -130,7 +130,7 @@ dmypy.json
 
 
 .vscode
-*.log
+discord.log*
 *.csv
 *.ini
 token
