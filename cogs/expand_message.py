@@ -192,6 +192,14 @@ class ExpandMessage(commands.Cog, name="メッセージの展開"):
                 img_embed.set_image(url=attachment.proxy_url)
                 embeds.append(img_embed)
 
+            # メッセージにembedが埋め込まれている場合はembedsにembedを追加
+            if message.embeds:
+                embeds.extend(message.embeds)
+
+            # embedsが10個以上の場合は、10個になるまでembedsから要素を削除
+            if len(embeds) > 10:
+                embeds = embeds[:10]
+
         return embeds
 
     @commands.Cog.listener()
