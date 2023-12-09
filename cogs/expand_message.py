@@ -51,7 +51,9 @@ class ExpandMessage(commands.Cog, name="メッセージの展開"):
         # チャンネルが取得できない場合は終了: abc.Messageableはメッセージを送信できるチャンネルの基底クラス
         if not isinstance(channel, discord.abc.Messageable):
             # logを出力
-            logger.warning(f"Unable to get messageable channel. {guild.id}/{channel_id} @get_message_from_ids")
+            logger.warning(
+                f"Unable to get messageable channel. {guild.id}/{channel_id} @get_message_from_ids"
+            )
             return
 
         try:
@@ -86,7 +88,6 @@ class ExpandMessage(commands.Cog, name="メッセージの展開"):
 
         # メッセージのURLを正規表現で抽出
         for matched in re.finditer(regex_discord_message_url, message.content):
-
             # メッセージのURLに含まれるサーバーIDが一致しない場合は終了
             if message.guild.id != int(matched["guild"]):
                 continue
@@ -110,7 +111,9 @@ class ExpandMessage(commands.Cog, name="メッセージの展開"):
                 continue
 
             # メッセージを取得
-            fetched_message = await self.get_message_from_ids(guild, channel_id, message_id)
+            fetched_message = await self.get_message_from_ids(
+                guild, channel_id, message_id
+            )
 
             # メッセージが取得できない場合はこのループを終了
             if fetched_message is None:
@@ -154,7 +157,11 @@ class ExpandMessage(commands.Cog, name="メッセージの展開"):
                 avatar_url = message.author.avatar.replace(format="png").url
 
             # embedにユーザーを追加
-            embed.set_author(name=message.author.display_name, icon_url=avatar_url, url=message.jump_url)
+            embed.set_author(
+                name=message.author.display_name,
+                icon_url=avatar_url,
+                url=message.jump_url,
+            )
 
             # サーバーのアイコンがない場合はデフォルトのアイコンを使用
             if message.guild.icon is None:
@@ -207,7 +214,9 @@ class ExpandMessage(commands.Cog, name="メッセージの展開"):
 
         # メッセージが送信されたチャンネルにメッセージを送信
         for embed in embeds:
-            await message.channel.send(embed=embed)
+            await message.channel.send(
+                embed=embed, allowed_mentions=discord.AllowedMentions.none()
+            )
 
     # @tasks.loop(minutes=1.0)
     # async def timer_task(self):
